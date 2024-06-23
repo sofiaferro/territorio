@@ -2,6 +2,8 @@
 
 Este proyecto es un secuenciador de imágenes que navega a través de diferentes preguntas escritas a mano por alumn@s de Lenguajes de las Artes Electrónicas: Video, materia impartida por Gabriela Golder en la Maestría en Artes Electrónicas de la UNTREF. 
 
+[territorio.dev.ar](https://territorio.dev.ar)
+
 ## Contenido
 
 - Las imágenes se encuentran en la carpeta `data/assets/`.
