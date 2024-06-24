@@ -1,6 +1,34 @@
 * {
   margin: 0;
   padding: 0;
-  overflow-y: hidden;
+  overflow: hidden;
   font-family: 'Courier New', Courier, monospace;
+}
+
+#p5_loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#p5_loading img {
+  width: 100px; /* ajusta el tamaño según sea necesario */
+  height: auto;
+  border-radius: 50%;
+  animation: spin 1s linear infinite; /* animación de rotación */
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
 }
