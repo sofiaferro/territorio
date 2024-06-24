@@ -68,13 +68,14 @@ function setup() {
 }
 
 function draw() {
-  background(0);
-  windowResized();
+  // No limpiar la pantalla
 
+  // Centrar la imagen actual
   let xOffset = (width - bgWidth) / 2;
   let yOffset = (height - bgHeight) / 2;
-  
   image(images[currentImageIndex], xOffset, yOffset, bgWidth, bgHeight);
+
+  // Aplicar efecto de transparencia a la imagen actual
   let alpha = map(sin(frameCount * 0.02), -3, 1, 100, 255);
   tint(255, alpha);
   image(images[currentImageIndex], xOffset + 25, yOffset, bgWidth, bgHeight);
