@@ -1,9 +1,10 @@
 p5.disableFriendlyErrors = true; // disables FES
+
 let images = [];
 let currentImageIndex = 0;
 let numImages = 193;
 let bgWidth, bgHeight;
-let batchSize = 50;
+let batchSize = 30;
 let imagesLoaded = 0;
 let soundFile;
 let allImagesLoaded = false;
@@ -55,24 +56,34 @@ function imageBackwards() {
   }
 }
 
+function loadBatch(startIndex) {
+  if (startIndex > 0) {
+    for (
+      let i = startIndex;
+      i < startIndex + batchSize && i <= numImages;
+      i++
+    ) {
+      let img = loadImage(`data/assets/${i}-imagen.jpg`, () => {
+        imagesLoaded++;
+      });
+      images.push(img);
+    }
+    if (imagesLoaded === numImages) {
+      allImagesLoaded = true;
+    }
+
+    // shuffle once all images are loaded
+    shuffleArray(images); 
+  }
+}
+
 // p5
 function preload() {
   // load sound
-  soundFile = loadSound("data/whatsapp_sound.mp3");
-  loadBatch(1); // Load the first batch of images
-}
-
-function loadBatch(startIndex) {
-  for (let i = startIndex; i < startIndex + batchSize && i <= numImages; i++) {
-    let img = loadImage(`data/assets/${i}-imagen.jpg`, () => {
-      imagesLoaded++;
-    });
-    images.push(img);
-  }
-  if (imagesLoaded === numImages) {
-    allImagesLoaded = true;
-  }
-  shuffleArray(images); // Shuffle once all images are loaded
+  soundFile = loadSound("data/trash_sound.mp3");
+  
+  // load the first batch of images
+  loadBatch(1); 
 }
 
 function setup() {
@@ -84,17 +95,15 @@ function draw() {
   background(0);
   windowResized();
 
-  if (images.length > 0) {
-    // Centrar la imagen actual
+  if (images.length > 0 && images[currentImageIndex]) {
     let xOffset = (width - bgWidth) / 2;
     let yOffset = (height - bgHeight) / 2;
     image(images[currentImageIndex], xOffset, yOffset, bgWidth, bgHeight);
 
-    // Aplicar efecto de transparencia a la imagen actual
     let alpha = map(sin(frameCount * 0.02), -3, 1, 100, 255);
     tint(255, alpha);
     image(images[currentImageIndex], xOffset + 25, yOffset, bgWidth, bgHeight);
-  } 
+  }
 }
 
 // events
