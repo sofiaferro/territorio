@@ -52,7 +52,7 @@ function preload() {
     let img = loadImage(`data/assets/${i}-imagen.jpg`);
     images.push(img);
   }
-  
+
   // randomize array
   if (images.length > 0) {
     shuffleArray(images);
@@ -68,7 +68,7 @@ function setup() {
 }
 
 function draw() {
-  // No limpiar la pantalla
+  windowResized();
 
   // Centrar la imagen actual
   let xOffset = (width - bgWidth) / 2;
