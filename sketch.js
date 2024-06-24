@@ -1,8 +1,12 @@
+p5.disableFriendlyErrors = true; // disables FES
 let images = [];
 let currentImageIndex = 0;
 let numImages = 193;
 let bgWidth, bgHeight;
-let loading;
+let batchSize = 50;
+let imagesLoaded = 0;
+let soundFile;
+let allImagesLoaded = false;
 
 // utils
 function shuffleArray(array) {
@@ -36,6 +40,9 @@ function imageForward() {
   if (soundFile.isLoaded()) {
     soundFile.play();
   }
+  if (currentImageIndex % batchSize === 0 && imagesLoaded < numImages) {
+    loadBatch(currentImageIndex + 1);
+  }
 }
 
 function imageBackwards() {
@@ -43,23 +50,29 @@ function imageBackwards() {
   if (soundFile.isLoaded()) {
     soundFile.play();
   }
+  if (currentImageIndex % batchSize === 0 && imagesLoaded < numImages) {
+    loadBatch(currentImageIndex - batchSize + 1);
+  }
 }
 
 // p5
 function preload() {
-  // load images
-  for (let i = 1; i <= numImages; i++) {
-    let img = loadImage(`data/assets/${i}-imagen.jpg`);
-    images.push(img);
-  }
-
-  // randomize array
-  if (images.length > 0) {
-    shuffleArray(images);
-  }
-
   // load sound
   soundFile = loadSound("data/whatsapp_sound.mp3");
+  loadBatch(1); // Load the first batch of images
+}
+
+function loadBatch(startIndex) {
+  for (let i = startIndex; i < startIndex + batchSize && i <= numImages; i++) {
+    let img = loadImage(`data/assets/${i}-imagen.jpg`, () => {
+      imagesLoaded++;
+    });
+    images.push(img);
+  }
+  if (imagesLoaded === numImages) {
+    allImagesLoaded = true;
+  }
+  shuffleArray(images); // Shuffle once all images are loaded
 }
 
 function setup() {
@@ -68,17 +81,20 @@ function setup() {
 }
 
 function draw() {
+  background(0);
   windowResized();
 
-  // Centrar la imagen actual
-  let xOffset = (width - bgWidth) / 2;
-  let yOffset = (height - bgHeight) / 2;
-  image(images[currentImageIndex], xOffset, yOffset, bgWidth, bgHeight);
+  if (images.length > 0) {
+    // Centrar la imagen actual
+    let xOffset = (width - bgWidth) / 2;
+    let yOffset = (height - bgHeight) / 2;
+    image(images[currentImageIndex], xOffset, yOffset, bgWidth, bgHeight);
 
-  // Aplicar efecto de transparencia a la imagen actual
-  let alpha = map(sin(frameCount * 0.02), -3, 1, 100, 255);
-  tint(255, alpha);
-  image(images[currentImageIndex], xOffset + 25, yOffset, bgWidth, bgHeight);
+    // Aplicar efecto de transparencia a la imagen actual
+    let alpha = map(sin(frameCount * 0.02), -3, 1, 100, 255);
+    tint(255, alpha);
+    image(images[currentImageIndex], xOffset + 25, yOffset, bgWidth, bgHeight);
+  } 
 }
 
 // events
@@ -92,6 +108,6 @@ function keyPressed() {
 
 function mouseClicked() {
   if (mouseButton === "left") {
-    return imageForward();
+    imageForward();
   }
 }
